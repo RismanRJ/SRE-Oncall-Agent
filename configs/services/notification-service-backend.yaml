@@ -1,0 +1,52 @@
+service:
+  name: notification-service-backend
+  description: notification-service-backend (New Relic app)
+
+# Data sources to fetch
+metrics:
+  newrelic: true
+  database: false
+  redis: false
+  elasticsearch: false
+
+# New Relic config
+newrelic:
+  app_name: notification-service-backend
+  lookback_minutes: 5        # window for TP99/error-rate/throughput queries
+  errors_lookback_minutes: 30 # window for the recent error-count query
+
+# AWS App Runner config for CPU + instance count
+aws:
+  region: ap-south-1
+  apprunner_service_name: notification-backend
+
+
+# Thresholds (per service)
+thresholds:
+  newrelic:
+    tp99_ms: 1500
+    tp95_ms: 800
+    error_rate_percent: 5
+    throughput_rpm_min: 5
+
+# Severity mapping
+severity:
+  critical:
+    newrelic:
+      - tp99_ms > 3000
+      - error_rate_percent > 10
+      - throughput_rpm_min < 2
+  warning:
+    newrelic:
+      - tp99_ms > 1500
+      - error_rate_percent > 5
+      - throughput_rpm_min < 5
+
+# Notification routing
+notifications:
+  critical:
+    channels: [slack, sns, voice_call, sms]
+    mention_oncall: true
+  warning:
+    channels: [slack]
+    mention_oncall: false

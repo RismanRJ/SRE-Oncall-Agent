@@ -1,0 +1,40 @@
+# Shared infrastructure configs (used by all services)
+# These are common across all applications, not per-service
+
+shared_services:
+  # Redis instances
+  redis_servers:
+    - name: redis-cache-1
+      description: Primary cache server
+      host: redis-cache-1.internal
+      port: 6379
+      password: null  # set if needed
+      db: 0
+      enabled: true
+
+    - name: redis-cache-2
+      description: Secondary cache server
+      host: redis-cache-2.internal
+      port: 6379
+      password: null
+      db: 0
+      enabled: true
+
+  # Database instances
+  database_servers:
+    - name: postgres-primary
+      description: Main application database
+      host: postgres.internal
+      port: 5432
+      username: monitoring_user  # read-only user
+      password: null  # set from env or config
+      database: snitch_prod
+      enabled: false  # disabled until Phase 10
+
+  # Elasticsearch clusters
+  elasticsearch_clusters:
+    - name: es-logs
+      description: Logs cluster
+      host: es-logs.internal
+      port: 9200
+      enabled: false  # disabled until Phase 9

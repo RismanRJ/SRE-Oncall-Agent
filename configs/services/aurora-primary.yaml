@@ -1,0 +1,49 @@
+service:
+  name: aurora-primary
+  description: Aurora PostgreSQL cluster (writer instance) - connection & health monitoring
+  type: infrastructure  # infrastructure service, not an app
+
+# Data sources to fetch
+metrics:
+  newrelic: false
+  database: true
+  redis: false
+  elasticsearch: false
+
+# Database config (writer endpoint only - pg_stat_activity checks target the writer)
+# host/port/credentials are injected via credentials manager (env vars / AWS Secrets Manager) - not stored here
+database:
+  database: postgres
+
+# AWS CloudWatch config for CPU + instance count
+aws:
+  region: ap-south-1
+  rds_cluster_identifier: snitch-database
+  rds_writer_instance_identifier: snitch-database-replica
+
+# Thresholds (per service)
+thresholds:
+  database:
+    active_connections_percent: 70
+    slow_query_count: 10
+    connection_wait_ms: 500
+
+# Severity mapping
+severity:
+  critical:
+    database:
+      - active_connections_percent > 90
+      - slow_query_count > 20
+  warning:
+    database:
+      - active_connections_percent > 70
+      - slow_query_count > 10
+
+# Notification routing
+notifications:
+  critical:
+    channels: [slack, sns, voice_call, sms]
+    mention_oncall: true
+  warning:
+    channels: [slack]
+    mention_oncall: false

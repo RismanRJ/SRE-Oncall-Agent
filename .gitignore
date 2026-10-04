@@ -1,0 +1,44 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.env.*
+.Python
+build/
+dist/
+
+# Streamlit
+.streamlit/
+
+# Incident storage (runtime data, not source)
+storage/incidents/
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Docker
+*.pid
+
+# Claude Code
+.claude/
+.claudeignore
+CLAUDE.md
+
+# Phase progress notes
+PHASE*_COMPLETE.md

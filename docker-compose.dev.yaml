@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  sre-agent:
+    build: .
+    container_name: sre-agent-dev
+    ports:
+      - "8000:8000"  # FastAPI
+      - "8501:8501"  # Streamlit
+    env_file:
+      - .env.dev
+    volumes:
+      # Code volume mounts for hot-reload
+      - ./server.py:/app/server.py
+      - ./app.py:/app/app.py
+      - ./agent:/app/agent
+      - ./auth:/app/auth
+      - ./oncall:/app/oncall
+      - ./thresholds:/app/thresholds
+      - ./tools:/app/tools
+      - ./metrics:/app/metrics
+      - ./notifications:/app/notifications
+      - ./configs:/app/configs
+      - ./storage:/app/storage
+    environment:
+      - DEV_MODE=true
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

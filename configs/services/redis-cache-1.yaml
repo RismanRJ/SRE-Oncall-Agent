@@ -1,0 +1,43 @@
+service:
+  name: redis-cache-1
+  description: Primary Redis cache server
+  type: infrastructure  # infrastructure service, not an app
+
+# Data sources to fetch
+metrics:
+  newrelic: false
+  database: false
+  redis: true
+  elasticsearch: false
+
+# Redis config
+# host/port/credentials are injected via credentials manager (env vars / AWS Secrets Manager) - not stored here
+redis:
+  db: 0
+
+# Thresholds (per service)
+thresholds:
+  redis:
+    memory_percent: 80
+    eviction_rate: 100
+    connected_clients_max: 1000
+
+# Severity mapping
+severity:
+  critical:
+    redis:
+      - memory_percent > 95
+      - connected_clients > 900
+  warning:
+    redis:
+      - memory_percent > 80
+      - eviction_rate > 100
+
+# Notification routing
+notifications:
+  critical:
+    channels: [slack, sns, voice_call, sms]
+    mention_oncall: true
+  warning:
+    channels: [slack]
+    mention_oncall: false

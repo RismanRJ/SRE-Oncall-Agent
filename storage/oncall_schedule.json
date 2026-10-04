@@ -1,0 +1,16 @@
+{
+  "monday": "carol@example.com",
+  "tuesday": "carol@example.com",
+  "wednesday": "alice@example.com",
+  "thursday": "bob@example.com",
+  "friday": "carol@example.com",
+  "saturday": "alice@example.com",
+  "sunday": "bob@example.com",
+  "rotations": [
+    {
+      "start_date": "2026-07-07",
+      "end_date": "2026-07-13",
+      "engineer_email": "admin@example.com"
+    }
+  ]
+}
